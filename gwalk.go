@@ -91,6 +91,9 @@ func gWalkTo(id string) error {
 }
 
 func getLinkFullInfo(lid linkId) (fli fullLinkInfo, resErr error) {
+	if resErr = initDBClient(); resErr != nil {
+		return
+	}
 	fli.id = lid
 	fli.tags = []string{}
 
@@ -117,6 +120,9 @@ func getLinkFullInfo(lid linkId) (fli fullLinkInfo, resErr error) {
 }
 
 func getVertexFullInfo(vertexId string) (fvi fullVertexInfo, resErr error) {
+	if resErr = initDBClient(); resErr != nil {
+		return
+	}
 	fvi.id = vertexId
 	fvi.outLinks = []linkId{}
 	fvi.inLinks = []linkId{}
@@ -361,6 +367,9 @@ func gWalkGetGraph(format string, root string, depth int, excludeVertex, exclude
 	originalFormat := format
 	// ----------------------------------------------------------------------------------
 
+	if err := initDBClient(); err != nil {
+		return "", err
+	}
 	system.MsgOnErrorReturn(gWalkLoad())
 
 	payload := easyjson.NewJSONObjectWithKeyValue("depth", easyjson.NewJSON(depth))
@@ -389,7 +398,7 @@ func gWalkGetGraph(format string, root string, depth int, excludeVertex, exclude
 		dbClient.Request(sfp.AutoRequestSelect, "functions.graph.api.object.debug.print.graph", root, &payload, nil),
 	)
 	if om.Status != sfMediators.SYNC_OP_STATUS_OK {
-		return "", fmt.Errorf(om.Details)
+		return "", fmt.Errorf("%s", om.Details)
 	}
 	fileJSON := om.Data.GetByPath("file").GetPtr()
 	fileJSON.Normalize()
@@ -405,6 +414,9 @@ func gWalkGetGraph(format string, root string, depth int, excludeVertex, exclude
 }
 
 func gWalkSetGraph(format string, root string, data string) error {
+	if err := initDBClient(); err != nil {
+		return err
+	}
 	system.MsgOnErrorReturn(gWalkLoad())
 
 	payload := easyjson.NewJSONObjectWithKeyValue("source", easyjson.NewJSON("payload"))
@@ -414,7 +426,7 @@ func gWalkSetGraph(format string, root string, data string) error {
 		dbClient.Request(sfp.AutoRequestSelect, "functions.graph.api.import", root, &payload, nil, 300*time.Second),
 	)
 	if om.Status != sfMediators.SYNC_OP_STATUS_OK {
-		return fmt.Errorf(om.Details)
+		return fmt.Errorf("%s", om.Details)
 	}
 	return nil
 }
@@ -454,6 +466,9 @@ func gWalkImportGraph(format string, graphData string) error {
 }
 
 func gWalkQuery(query string) error {
+	if err := initDBClient(); err != nil {
+		return err
+	}
 	system.MsgOnErrorReturn(gWalkLoad())
 
 	result, err := dbClient.Query.JPGQLCtraQuery(gWalkData.GetByPath("id").AsStringDefault("root"), query)
