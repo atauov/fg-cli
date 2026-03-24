@@ -4,6 +4,16 @@ Command-line tool for navigating and managing the [Foliage](https://github.com/f
 
 ## Installation
 
+Download the latest binary from [Releases](https://github.com/atauov/fg-cli/releases/latest):
+
+| Platform | Binary |
+|----------|--------|
+| Linux (amd64) | [foliage-cli-linux-amd64](https://github.com/atauov/fg-cli/releases/download/v0.1.0/foliage-cli-linux-amd64) |
+| Windows (64-bit) | [foliage-cli-windows-amd64.exe](https://github.com/atauov/fg-cli/releases/download/v0.1.0/foliage-cli-windows-amd64.exe) |
+| macOS (Apple Silicon) | [foliage-cli-darwin-arm64](https://github.com/atauov/fg-cli/releases/download/v0.1.0/foliage-cli-darwin-arm64) |
+
+### Build from source
+
 ```bash
 go build -o foliage-cli .
 ```
