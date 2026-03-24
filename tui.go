@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/textinput"
@@ -152,6 +153,9 @@ func fetchLinksCmd(id string, gen int, fvi *fullVertexInfo) tea.Cmd {
 				failed++
 			}
 		}
+		sort.Slice(links, func(i, j int) bool {
+			return links[i].info.id.name < links[j].info.id.name
+		})
 		var partialErr error
 		if failed > 0 {
 			partialErr = fmt.Errorf("%d link(s) failed to load", failed)
